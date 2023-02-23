@@ -1,0 +1,28 @@
+{
+  "name": "npm-dependency-tree",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ninefivetwo/npm-dependency-tree.git"
+  },
+  "keywords": [
+    "npm",
+    "dependency",
+    "tree"
+  ],
+  "author": "Keith Chau",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ninefivetwo/npm-dependency-tree/issues"
+  },
+  "homepage": "https://github.com/ninefivetwo/npm-dependency-tree#readme",
+  "dependencies": {
+    "semver": "^7.3.8"
+  }
+}
