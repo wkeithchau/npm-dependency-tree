@@ -11,7 +11,7 @@ const fetchPackageData = async (name, version) => {
   return data;
 };
 
-export const getDependencyTree = async (name, version) => {
+export const getApiDependencyTree = async (name, version) => {
   const semnaticVersion = semver.coerce(version).version;
   const data = await fetchPackageData(name, semnaticVersion);
   const info = {
@@ -27,7 +27,7 @@ export const getDependencyTree = async (name, version) => {
     await Promise.all(
       dependencies.map(async ([depName, depVersion]) => {
         const exactDepVersion = depVersion.replace(/[^.\d]/g, "");
-        const depInfo = await getDependencyTree(depName, exactDepVersion);
+        const depInfo = await getApiDependencyTree(depName, exactDepVersion);
         info.dependencies[depName] = depInfo;
       })
     );

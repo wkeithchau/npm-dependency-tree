@@ -1,6 +1,7 @@
-import fs from "fs";
+import { existsSync, mkdirSync, writeFileSync } from "fs";
 
-import { getDependencyTree } from "./dep-from-registry-api.js";
+import { getInstallDependencyTree } from "./dep-tree-from-install.js";
+import { getApiDependencyTree } from "./dep-from-registry-api.js";
 
 const DESTINATION_FILE = "api-dep-tree.json";
 const PACKAGES_DIR = "./packages";
@@ -12,15 +13,15 @@ if (process.argv.length === 3) {
 
     // Ensure packages directory exists
     const path = `${PACKAGES_DIR}/${target}`;
-    if (!fs.existsSync(path)) {
-      fs.mkdirSync(path, { recursive: true });
+    if (!existsSync(path)) {
+      mkdirSync(path, { recursive: true });
     }
 
-    // Generate dependency tree based from npm's public registry API
-    const depTree = await getDependencyTree(packageName, packageVersion);
-    fs.writeFileSync(
+    // Generate dependency tree from npm's public registry API
+    const apiDepTree = await getApiDependencyTree(packageName, packageVersion);
+    writeFileSync(
       `${path}/${DESTINATION_FILE}`,
-      JSON.stringify(depTree, null, 2)
+      JSON.stringify(apiDepTree, null, 2)
     );
     process.exit();
   }
