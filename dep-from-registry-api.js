@@ -1,6 +1,9 @@
+import { existsSync, writeFileSync } from "fs";
 import semver from "semver";
 
 import { url } from "./constants.js";
+
+const DESTINATION_FILE = "api-dep-tree.json";
 
 const fetchPackageData = async (name, version) => {
   const completeUrl = `${url}/${name}/${version}`;
@@ -11,7 +14,11 @@ const fetchPackageData = async (name, version) => {
   return data;
 };
 
-export const getApiDependencyTree = async (name, version) => {
+export const getApiDependencyTree = async (name, version, path) => {
+  if (existsSync(`${path}/${DESTINATION_FILE}`)) {
+    return;
+  }
+
   const semnaticVersion = semver.coerce(version).version;
   const data = await fetchPackageData(name, semnaticVersion);
   const info = {
@@ -27,11 +34,15 @@ export const getApiDependencyTree = async (name, version) => {
     await Promise.all(
       dependencies.map(async ([depName, depVersion]) => {
         const exactDepVersion = depVersion.replace(/[^.\d]/g, "");
-        const depInfo = await getApiDependencyTree(depName, exactDepVersion);
+        const depInfo = await getApiDependencyTree(
+          depName,
+          exactDepVersion,
+          path
+        );
         info.dependencies[depName] = depInfo;
       })
     );
   }
 
-  return info;
+  writeFileSync(`${path}/${DESTINATION_FILE}`, JSON.stringify(info, null, 2));
 };

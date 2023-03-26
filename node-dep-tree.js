@@ -3,7 +3,6 @@ import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { getInstallDependencyTree } from "./dep-tree-from-install.js";
 import { getApiDependencyTree } from "./dep-from-registry-api.js";
 
-const DESTINATION_FILE = "api-dep-tree.json";
 const PACKAGES_DIR = "./packages";
 
 if (process.argv.length === 3) {
@@ -17,12 +16,20 @@ if (process.argv.length === 3) {
       mkdirSync(path, { recursive: true });
     }
 
-    // Generate dependency tree from npm's public registry API
-    const apiDepTree = await getApiDependencyTree(packageName, packageVersion);
-    writeFileSync(
-      `${path}/${DESTINATION_FILE}`,
-      JSON.stringify(apiDepTree, null, 2)
+    // Generate dependency tree from npm install
+    const installDepTree = await getInstallDependencyTree(
+      packageName,
+      packageVersion,
+      path
     );
+
+    // Generate dependency tree from npm's public registry API
+    const apiDepTree = await getApiDependencyTree(
+      packageName,
+      packageVersion,
+      path
+    );
+
     process.exit();
   }
 }
