@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/ninefivetwo/npm-dependency-tree#readme",
   "dependencies": {
+    "glob": "^9.3.2",
     "semver": "^7.3.8"
   }
 }
